@@ -1,3 +1,5 @@
+# Script
+
 Get-CimInstance -ClassName Win32_PhysicalMemory | Select-Object Manufacturer, PartNumber, @{Name="MemoryType";Expression={
     switch($_.MemoryType) {
         20 {"DDR"}
