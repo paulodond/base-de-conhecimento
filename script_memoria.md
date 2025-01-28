@@ -7,3 +7,13 @@ Get-CimInstance -ClassName Win32_PhysicalMemory | Select-Object Manufacturer, Pa
         default {"Desconhecido"}
     }
 }}, Speed
+
+
+# Observações: Se o MemoryType não retonar o tipo de memoria copie o PartNumber e joga no Google
+
+* Exemplo de saida:
+
+Manufacturer PartNumber           MemoryType   Speed
+------------ ----------           ----------   -----
+04CB000080AD AL1P32NC8W1-B1AS     Desconhecido  3200
+04CB000080AD AL1P32NC8W1-B1AS     Desconhecido  3200
