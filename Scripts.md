@@ -1,1 +1,1 @@
-- [script_memoria](script_memoria.md)
+- [Script Verifica tipo de memória RAM](script_memoria.md)
