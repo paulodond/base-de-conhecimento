@@ -1,4 +1,4 @@
-# Script
+# Script (clie em RAW para ver mais legível.
 
 Get-CimInstance -ClassName Win32_PhysicalMemory | Select-Object Manufacturer, PartNumber, @{Name="MemoryType";Expression={
     switch($_.MemoryType) {
