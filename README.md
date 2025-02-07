@@ -8,3 +8,6 @@ Sinta-se à vontade para abrir issues ou enviar pull requests para melhorar noss
 # Menu
 
 - [Scripts úteis](Scripts.md)
+- [Windows](Windows.md)
+- [Linux](Linux.md)
+- [Segurança](Segurança.md)
