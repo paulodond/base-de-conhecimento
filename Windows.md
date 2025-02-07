@@ -1,1 +1,1 @@
-- [Central de Rede e Compartilhamento no Win 11](central_de_rede.md)
+- [Abrir Central de Rede e Compartilhamento no Win 11](central_de_rede.md)
