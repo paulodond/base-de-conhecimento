@@ -1,1 +1,1 @@
-- [Central de Rede e Compartilhamenot no Win 11](script_memoria.md)
+- [Central de Rede e Compartilhamenot no Win 11](central_de_rede.md)
