@@ -1,1 +1,1 @@
-- [Abrir Central de Rede e Compartilhamento no Windows 11](central de rede.md)
+- [Script Verifica tipo de memória RAM](script_memoria.md)
