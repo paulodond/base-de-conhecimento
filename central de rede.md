@@ -3,4 +3,4 @@ Abrir centrar de Rede e Compartilhamento no Windows 11
 # Opções
 
 1 - Abrir painel de Controle.
-/n2 - Via executar Control.exe /name Microsoft.networkandSharingcenter
+2 - Via executar Control.exe /name Microsoft.networkandSharingcenter
