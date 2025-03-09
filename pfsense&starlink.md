@@ -36,3 +36,19 @@ Ex:  10.10.120.2\32
 ![image](https://github.com/user-attachments/assets/d3c9fbad-dd0f-41bb-9650-5297d442a8c4)
 
 # SALVAR
+
+#Interface Assignments
+
+Vamos adicionar a interface que acabmos de criar lá no WIREGUARD.
+
+![image](https://github.com/user-attachments/assets/513d63d2-078d-4fd3-bbeb-091de15d77ec)
+
+Configurar a Interface
+
+![image](https://github.com/user-attachments/assets/95af05ee-33f0-4892-ae24-ae5f29a8a55d)
+![image](https://github.com/user-attachments/assets/af30d864-22d1-4c3b-8cf2-13725ae99189)
+![image](https://github.com/user-attachments/assets/f900e363-b79b-4db2-9d06-0db3ff28369a)
+
+
+
+
