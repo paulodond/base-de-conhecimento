@@ -41,7 +41,7 @@ Ex:  10.10.120.2\32
 
 Vamos adicionar a interface que acabmos de criar lá no WIREGUARD.
 
-![image](https://github.com/user-attachments/assets/513d63d2-078d-4fd3-bbeb-091de15d77ec)
+![image](https://github.com/user-attachments/assets/118447d3-7de8-4030-9328-f1e96f9d87f9)
 
 Configurar a Interface
 
