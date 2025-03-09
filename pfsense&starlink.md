@@ -65,5 +65,7 @@ System/Routing/Static Routes
 
 ![image](https://github.com/user-attachments/assets/ccb70767-a11e-4073-bbf6-6abcd05091ee)
 
+# Salvar
 
+Até aqui configuramos o Wireguard do lado do pfSene agora teremos que criar uma VPS em qualquer nuvem da sua escolha, nesse tutorial iremos criar uma instância EC2 na Amazon com Ubuntu Server 24.
 
