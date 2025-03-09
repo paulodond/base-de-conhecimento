@@ -49,6 +49,21 @@ Configurar a Interface
 ![image](https://github.com/user-attachments/assets/af30d864-22d1-4c3b-8cf2-13725ae99189)
 ![image](https://github.com/user-attachments/assets/f900e363-b79b-4db2-9d06-0db3ff28369a)
 
+# Salvar
+
+#Vamos adicionar um GATEWAY 
+
+System/Routing/Gateways
+
+![image](https://github.com/user-attachments/assets/cb4048be-34ef-442b-bd90-2b722f534b6d)
+
+# Salvar
+
+#Vamos adicionar uma rota estática para garantir que o tráfego da rede Wireguard sair pelo Gateway que criamos.
+
+System/Routing/Static Routes
+
+![image](https://github.com/user-attachments/assets/ccb70767-a11e-4073-bbf6-6abcd05091ee)
 
 
 
