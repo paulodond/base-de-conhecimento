@@ -26,3 +26,11 @@ O que vamos fazer aqui é contornar o CGNAT.
 
 ![image](https://github.com/user-attachments/assets/f6a78f84-4ba6-4b16-a2d6-6e08b0997d61)
 
+#Interface Configuration (tun_wg1)
+
+#Interface Addresses:#
+
+#Insira o IP da sua interface wireguard#
+Ex:  10.10.120.2\32
+
+![image](https://github.com/user-attachments/assets/d3c9fbad-dd0f-41bb-9650-5297d442a8c4)
