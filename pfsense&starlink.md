@@ -9,3 +9,5 @@ Lado do pfSense
 1 - Instalar o pacote WIREGUARD
 
 
+![image](https://github.com/user-attachments/assets/f6a78f84-4ba6-4b16-a2d6-6e08b0997d61)
+
