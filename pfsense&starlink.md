@@ -34,3 +34,5 @@ O que vamos fazer aqui é contornar o CGNAT.
 Ex:  10.10.120.2\32
 
 ![image](https://github.com/user-attachments/assets/d3c9fbad-dd0f-41bb-9650-5297d442a8c4)
+
+# SALVAR
