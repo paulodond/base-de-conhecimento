@@ -14,14 +14,13 @@ Aprenda a configurar seu próprio servidor **RustDesk** de forma segura, usando 
 6. [Configuração do Cliente RustDesk](#6-configuração-do-cliente-rustdesk)  
 7. [Segurança Adicional](#7-segurança-adicional)  
 
----
+
 ########################################
 # Instalação do Docker e Docker Compose
 ########################################
 
 Essa instalçao foi feita no Ubuntu 22.
 
-```bash
 sudo apt update
 sudo apt install -y ca-certificates curl gnupg
 
