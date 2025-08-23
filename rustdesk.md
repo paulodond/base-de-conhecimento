@@ -83,8 +83,6 @@ sudo docker rm rustdesk-temp
 * `/opt/rustdesk-keys/id_ed25519` → chave privada
 * `/opt/rustdesk-keys/id_ed25519.pub` → chave pública
 
-🖼️ *Sugestão de imagem:* ilustração de chaves SSH com ícones de segurança.
-
 ---
 
 ## 3️⃣ Configuração com Docker Compose
@@ -94,7 +92,7 @@ Crie diretório e arquivo:
 ```bash
 sudo mkdir -p /opt/rustdesk-server
 cd /opt/rustdesk-server
-nano docker-compose.yml
+vim.tiny docker-compose.yml
 ```
 
 Exemplo de `docker-compose.yml`:
@@ -145,8 +143,6 @@ sudo docker compose up -d
 sudo docker compose ps
 ```
 
-🖼️ *Sugestão de imagem:* esquema visual de containers Docker comunicando entre si.
-
 ---
 
 ## 4️⃣ Configuração do Nginx
@@ -155,6 +151,8 @@ Instalar Nginx:
 
 ```bash
 sudo apt install -y nginx
+
+vim.tiny /etc/nginx/sites-available/seudominio.com
 ```
 
 Criar configuração (substitua `SEU_DOMINIO`):
@@ -186,8 +184,6 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-🖼️ *Sugestão de imagem:* diagrama Nginx → RustDesk.
-
 ---
 
 ## 5️⃣ Configurar SSL com Certbot
@@ -198,7 +194,9 @@ sudo certbot --nginx -d SEU_DOMINIO
 sudo certbot renew --dry-run
 ```
 
-Se usar porta HTTPS customizada (ex.: 10447):
+Se usar porta HTTPS customizada  troque por esse (ex.: 10447):
+
+vim.tiny /etc/nginx/sites-available/seudominio.com
 
 ```nginx
 server {
@@ -238,13 +236,11 @@ server {
 * **ID server:** `SEU_DOMINIO:21116`
 * **Relay server:** `SEU_DOMINIO:21117`
 * **API server:** `https://SEU_DOMINIO:10447`
-* **Key:** `/opt/rustdesk-keys/id_ed25519.pub`
+* **Key:** `SUA_CHAVE_PUBLICA`
 
 ```bash
 cat /opt/rustdesk-keys/id_ed25519.pub
 ```
-
-🖼️ *Sugestão de imagem:* interface do cliente RustDesk mostrando campos de servidor e chave.
 
 ---
 
