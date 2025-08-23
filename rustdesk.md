@@ -15,10 +15,11 @@ Aprenda a configurar seu próprio servidor **RustDesk** de forma segura, usando 
 7. [Segurança Adicional](#7-segurança-adicional)  
 
 ---
+########################################
+# Instalação do Docker e Docker Compose
+########################################
 
-## 1️⃣ Instalação do Docker e Docker Compose
-
-Exemplo para Debian/Ubuntu:
+Essa instalçao foi feita no Ubuntu 22.
 
 ```bash
 sudo apt update
@@ -34,6 +35,25 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
 
 sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+################################ 
+# Geração de Chaves Persistentes
+################################
+
+sudo mkdir -p /opt/rustdesk-keys
+
+# Rodar container temporário
+sudo docker run --name rustdesk-temp -d -p 21115-21119:21115-21119 rustdesk/rustdesk-server hbbs
+
+# Copiar chaves
+sudo docker cp rustdesk-temp:/root/id_ed25519 /opt/rustdesk-keys/
+sudo docker cp rustdesk-temp:/root/id_ed25519.pub /opt/rustdesk-keys/
+
+# Remover container temporário
+sudo docker stop rustdesk-temp
+sudo docker rm rustdesk-temp
+
+
 
 docker --version
 docker compose version
