@@ -1,14 +1,3 @@
-Perfeito! 😎 Vamos deixar o README **bem visual**, com:
-
-* Emojis chamativos em cada seção e comando
-* Blocos de código destacados com cores
-* Notas, dicas e alertas visualmente claros
-* Sugestão de imagens ilustrativas (placeholders) que você pode substituir
-
-Segue a versão **ilustrativa pronta para GitHub**:
-
----
-
 ````markdown
 # 🚀 Guia Completo: Servidor RustDesk com Docker, Nginx e SSL
 
