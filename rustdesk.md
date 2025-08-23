@@ -283,8 +283,47 @@ Exemplo `/etc/fail2ban/jail.local`:
 
 ```ini
 [DEFAULT]
+# Tempo que o IP fica banido (em segundos)
 bantime = 1d
+# Quantas tentativas antes de banir
 maxretry = 5
+# Tempo para resetar contagem de tentativas
 findtime = 10m
-dest
+# Endereço de email para notificações
+destemail = seuemail@dominio.com
+sender = fail2ban@localhost
+mta = sendmail
+banaction = iptables-multiport
+
+# Habilita log detalhado
+loglevel = INFO
+
+[sshd]
+enabled = true
+port = 22
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = 5
+
+[nginx-http-auth]
+enabled = true
+port = http,https
+filter = nginx-http-auth
+logpath = /var/log/nginx/error.log
+maxretry = 5
+
+[nginx-botsearch]
+enabled = true
+port = http,https
+filter = nginx-botsearch
+logpath = /var/log/nginx/access.log
+maxretry = 5
+
+[nginx-limit-req]
+enabled = true
+port = http,https
+filter = nginx-limit-req
+logpath = /var/log/nginx/error.log
+maxretry = 10
+
 ```
