@@ -4,6 +4,8 @@
 Aprenda a configurar seu próprio servidor **RustDesk** de forma segura, usando Docker, Nginx e Certbot.  
 Ideal para controle total de acesso remoto e autenticação.
 
+Lembre-se de alterar a porta padrão do SSH e também liberar as portas e fazer o forward cnecessário no seu Firewall
+
 ---
 
 ## 📖 Sumário
