@@ -14,13 +14,13 @@ Aprenda a configurar seu próprio servidor **RustDesk** de forma segura, usando 
 6. [Configuração do Cliente RustDesk](#6-configuração-do-cliente-rustdesk)  
 7. [Segurança Adicional](#7-segurança-adicional)  
 
+---
 
-########################################
-# Instalação do Docker e Docker Compose
-########################################
+## 1️⃣ Instalação do Docker e Docker Compose
 
-Essa instalçao foi feita no Ubuntu 22.
+Exemplo para Debian/Ubuntu:
 
+```bash
 sudo apt update
 sudo apt install -y ca-certificates curl gnupg
 
@@ -35,9 +35,11 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
 sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-################################ 
-# Geração de Chaves Persistentes
-################################
+docker --version
+docker compose version
+
+# Opcional: permitir Docker sem sudo
+sudo usermod -aG docker $USER
 
 sudo mkdir -p /opt/rustdesk-keys
 
@@ -52,10 +54,48 @@ sudo docker cp rustdesk-temp:/root/id_ed25519.pub /opt/rustdesk-keys/
 sudo docker stop rustdesk-temp
 sudo docker rm rustdesk-temp
 
+sudo mkdir -p /opt/rustdesk-server
+cd /opt/rustdesk-server
+nano docker-compose.yml
 
+services:
+  hbbs:
+    container_name: hbbs
+    image: rustdesk/rustdesk-server
+    command: hbbs -r SEU_DOMINIO:21117 -k _
+    volumes:
+      - ./data:/root
+      - /opt/rustdesk-keys/id_ed25519:/root/id_ed25519:ro
+      - /opt/rustdesk-keys/id_ed25519.pub:/root/id_ed25519.pub:ro
+    ports:
+      - "21115:21115"
+      - "21116:21116"
+      - "21116:21116/udp"
+    restart: unless-stopped
+    user: "1000:1000"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
 
-docker --version
-docker compose version
+  hbbr:
+    container_name: hbbr
+    image: rustdesk/rustdesk-server
+    command: hbbr
+    volumes:
+      - ./data:/root
+      - /opt/rustdesk-keys/id_ed25519:/root/id_ed25519:ro
+      - /opt/rustdesk-keys/id_ed25519.pub:/root/id_ed25519.pub:ro
+    ports:
+      - "21117:21117"
+      - "21118:21118"
+      - "21119:21119"
+    restart: unless-stopped
+    user: "1000:1000"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
 
-# Opcional: permitir Docker sem sudo
-sudo usermod -aG docker $USER
+sudo docker compose up -d
+sudo docker compose ps
+
+sudo apt install -y nginx
