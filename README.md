@@ -12,3 +12,4 @@ Sinta-se à vontade para abrir issues ou enviar pull requests para melhorar noss
 - [Linux](Linux.md)
 - [Segurança](Segurança.md)
 - [pfSense](pfSense.md)
+- [RustDesk Self-Hosting](rustdesk.md)
