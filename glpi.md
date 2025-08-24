@@ -1,92 +1,95 @@
-````markdown
-# 📘 Tutorial de Implantação GLPI + Grafana com Docker, Nginx e SSL
+# Tutorial de Implantação GLPI + Grafana com Docker, Nginx e SSL
 
-Este guia mostra como implantar o **GLPI** e o **Grafana** em containers Docker, utilizando **Nginx como proxy reverso** e
-**Certbot para SSL** 🔐.  
-Tudo foi deixado **genérico**, sem credenciais ou domínios reais. Basta **editar os arquivos `.env` e as configs do Nginx**
-para seu ambiente.
+Este tutorial descreve como configurar o GLPI e o Grafana usando Docker, Nginx como proxy reverso e SSL com Let's Encrypt. Os dados sensíveis foram substituídos por placeholders (ex.: `SUA_SENHA`, `SEU_DOMINIO`) para personalização.
 
----
+## 1. Preparação do Sistema
 
-## 🛠️ 1. Preparação do Sistema
-
-### 🔄 1.1. Atualizar sistema e instalar dependências
+### 1.1. Atualização do Sistema e Instalação de Dependências Básicas
 
 ```bash
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common gnupg lsb-release nginx certbot python3-certbot-nginx
-````
+```
 
-### 🐳 1.2. Instalar Docker e Docker Compose
+### 1.2. Instalação do Docker e Docker Compose
 
 ```bash
-# Instalar dependências
+# Atualizar pacotes e instalar dependências
 sudo apt update
 sudo apt install -y ca-certificates curl gnupg lsb-release
 
-# Adicionar chave GPG do Docker
+# Adicionar chave GPG oficial do Docker
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
-# Adicionar repositório Docker
+# Adicionar repositório Docker para Debian Bookworm
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-# Instalar Docker e plugins
+# Atualizar fontes e instalar Docker e Compose
 sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# Adicionar usuário ao grupo docker
+# Adicionar usuário atual ao grupo docker
 sudo usermod -aG docker $USER
 ```
 
----
+> **Nota**: Faça logout e login novamente para aplicar as permissões do grupo `docker`.
 
-## 📂 2. Configuração do Docker Compose
+## 2. Configuração do Docker Compose
 
-### 📁 2.1. Criar estrutura de diretórios
+### 2.1. Criar Estrutura de Diretórios
 
 ```bash
 mkdir -p /docker/glpi-server
 cd /docker/glpi-server
 ```
 
-### 🔑 2.2. Criar arquivo `.env` com variáveis
+### 2.2. Criar arquivo `.env` para variáveis sensíveis
 
-vim.tiny .env
+Crie um arquivo `.env` com as variáveis necessárias:
 
 ```bash
-cat > .env << 'EOL'
+vim .env
+```
+
+Adicione o seguinte conteúdo, substituindo os placeholders pelos valores desejados:
+
+```bash
 # Config MariaDB
-MYSQL_ROOT_PASSWORD=defina_sua_senha
+MYSQL_ROOT_PASSWORD=SUA_SENHA_MARIADB_ROOT
 MYSQL_DATABASE=glpidb
 MYSQL_USER=glpi
-MYSQL_PASSWORD=defina_sua_senha
+MYSQL_PASSWORD=SUA_SENHA_MARIADB_USER
 
 # Config GLPI
 GLPI_LANG=pt_BR
 MARIADB_HOST=glpi-mariadb
 MARIADB_DATABASE=glpidb
 MARIADB_USER=glpi
-MARIADB_PASSWORD=defina_sua_senha
+MARIADB_PASSWORD=SUA_SENHA_MARIADB_USER
 
 # Config Grafana
 GF_SECURITY_ADMIN_USER=admin
-GF_SECURITY_ADMIN_PASSWORD=defina_sua_senha
-GF_SERVER_ROOT_URL=https://seu-dominio.com:3000
-EOL
+GF_SECURITY_ADMIN_PASSWORD=SUA_SENHA_GRAFANA_ADMIN
+GF_SERVER_ROOT_URL=https://SEU_DOMINIO:3000
+```
 
-# Restringido persmissões ao .env
+> **Nota**: Substitua `SUA_SENHA_MARIADB_ROOT`, `SUA_SENHA_MARIADB_USER`, `SUA_SENHA_GRAFANA_ADMIN` e `SEU_DOMINIO` pelos valores apropriados. Use senhas fortes e únicas.
+
+Restringir permissões do arquivo `.env`:
+
+```bash
 chmod 600 .env
 ```
 
-⚠️ **Importante:** Altere as senhas e o domínio antes de usar.
+### 2.3. Criar arquivo `docker-compose.yml`
 
----
+```bash
+vim docker-compose.yml
+```
 
-### 📜 2.3. Criar arquivo `docker-compose.yml`
-
-vim.tiny docker-compose.yml
+Adicione o seguinte conteúdo:
 
 ```yaml
 services:
@@ -165,16 +168,16 @@ volumes:
   grafana-data:
 ```
 
----
+> **Nota**: Substitua `SEU_IP` pelo IP do seu servidor ou deixe em branco para usar `localhost`.
 
-### 📂 2.4. Criar diretórios de persistência
+### 2.4. Criar diretórios de persistência e ajustar permissões
 
 ```bash
 mkdir -p mariadb-data glpi-data glpi-config glpi-files glpi-plugins grafana-data
 sudo chown -R 472:472 grafana-data
 ```
 
-### ▶️ 2.5. Inicializar containers
+### 2.5. Inicializar os containers
 
 ```bash
 docker compose up -d
@@ -182,25 +185,26 @@ docker compose ps
 docker compose logs -f
 ```
 
----
+## 3. Configuração do Nginx como Proxy Reverso
 
-## 🌐 3. Configuração do Nginx como Proxy Reverso
-
-### 💾 3.1. Backup da configuração
+### 3.1. Backup da configuração original
 
 ```bash
 sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
 sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.backup
 ```
 
-### ⚙️ 3.2. Ajustar `nginx.conf`
+### 3.2. Ajustar configuração principal do Nginx
 
-* Configure segurança (TLS 1.2/1.3, cabeçalhos de segurança, gzip etc.)
-* Inclua diretivas para **proxy reverso** e **logs**
+Edite o arquivo `/etc/nginx/nginx.conf`:
 
+```bash
+vim /etc/nginx/nginx.conf
 ```
-vim.tiny /etc/nginx/nginx.conf
 
+Substitua o conteúdo pelo seguinte:
+
+```nginx
 user www-data;
 worker_processes auto;
 pid /run/nginx.pid;
@@ -268,63 +272,204 @@ http {
     include /etc/nginx/conf.d/*.conf;
     include /etc/nginx/sites-enabled/*;
 }
+```
 
+### 3.3. Configurar proxy reverso para GLPI e Grafana
 
----
+#### 3.3.1. Configuração temporária para validação Let's Encrypt (porta 80)
 
-## 🔐 4. Certificados SSL com Certbot
+Crie o arquivo `/etc/nginx/sites-available/temp-glpi`:
+
+```bash
+vim /etc/nginx/sites-available/temp-glpi
+```
+
+Adicione:
+
+```nginx
+server {
+    listen 80;
+    server_name SEU_DOMINIO;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/html;
+    }
+
+    location / {
+        return 301 https://$server_name:8081$request_uri;
+    }
+}
+```
+
+Ative o site e prepare diretórios para o Certbot:
+
+```bash
+sudo ln -s /etc/nginx/sites-available/temp-glpi /etc/nginx/sites-enabled/
+sudo mkdir -p /var/www/html/.well-known/acme-challenge
+sudo chown -R www-data:www-data /var/www/html
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+### 3.4. Obter certificados SSL com Certbot
 
 ```bash
 sudo certbot certonly --webroot \
   --webroot-path=/var/www/html \
-  --email seu-email@dominio.com \
+  --email SEU_EMAIL \
   --agree-tos \
   --no-eff-email \
-  -d seu-dominio.com
+  -d SEU_DOMINIO
 ```
 
----
+> **Nota**: Substitua `SEU_EMAIL` e `SEU_DOMINIO` pelos valores apropriados.
 
-## 📑 5. Virtual Hosts no Nginx
+### 3.5. Configurar Virtual Hosts Nginx com SSL
 
-Crie os arquivos:
+#### 3.5.1. GLPI (porta 8081)
 
-* `/etc/nginx/sites-available/glpi-seu-dominio.com`
-* `/etc/nginx/sites-available/grafana-seu-dominio.com`
-
-👉 Edite para apontar para o **IP do servidor Docker** (exemplo: `172.20.0.2`) e para seu **domínio**.
-
----
-
-## ✅ 6. Ativar configurações e reiniciar
+Crie `/etc/nginx/sites-available/glpi-SEU_DOMINIO`:
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/glpi-seu-dominio.com /etc/nginx/sites-enabled/
-sudo ln -s /etc/nginx/sites-available/grafana-seu-dominio.com /etc/nginx/sites-enabled/
+vim /etc/nginx/sites-available/glpi-SEU_DOMINIO
+```
+
+Adicione:
+
+```nginx
+server {
+    listen 8081 ssl http2;
+    server_name SEU_DOMINIO;
+
+    ssl_certificate /etc/letsencrypt/live/SEU_DOMINIO/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/SEU_DOMINIO/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    client_max_body_size 100M;
+
+    proxy_set_header Host $host:$server_port;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Port $server_port;
+
+    location / {
+        proxy_pass http://SEU_IP:8080;
+        proxy_redirect off;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+        proxy_buffering on;
+        proxy_buffer_size 4k;
+        proxy_buffers 8 4k;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+        proxy_pass http://SEU_IP:8080;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    access_log /var/log/nginx/glpi-access.log main;
+    error_log /var/log/nginx/glpi-error.log;
+}
+
+server {
+    listen 8081;
+    server_name SEU_DOMINIO;
+    return 301 https://$server_name:$server_port$request_uri;
+}
+```
+
+> **Nota**: Substitua `SEU_DOMINIO` e `SEU_IP` pelos valores apropriados.
+> As portas usadas aqui froam para atende ao meu cenário devio ao uso da porta 80 e 443 por outros serviço.
+
+#### 3.5.2. Grafana (porta 3000)
+
+Crie `/etc/nginx/sites-available/grafana-SEU_DOMINIO`:
+
+```bash
+vim /etc/nginx/sites-available/grafana-SEU_DOMINIO
+```
+> **Nota**: Substitua `SEU_DOMINIO` e `SEU_IP` pelos valores apropriados.
+
+Adicione:
+
+```nginx
+server {
+    listen 3000 ssl http2;
+    server_name SEU_DOMINIO;
+
+    ssl_certificate /etc/letsencrypt/live/SEU_DOMINIO/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/SEU_DOMINIO/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    proxy_set_header Host $host:$server_port;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Port $server_port;
+    proxy_set_header X-Forwarded-Host $host:$server_port;
+
+    location / {
+        proxy_pass http://SEU_IP:3001;
+        proxy_redirect off;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+
+    location /api/ {
+        proxy_pass http://SEU_IP:3001;
+        proxy_set_header Host $host:$server_port;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        proxy_pass http://SEU_IP:3001;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    access_log /var/log/nginx/grafana-access.log main;
+    error_log /var/log/nginx/grafana-error.log;
+}
+
+server {
+    listen 3000;
+    server_name SEU_DOMINIO;
+    return 301 https://$server_name:$server_port$request_uri;
+}
+```
+
+### 3.6. Ativar sites Nginx e remover padrão
+
+```bash
+sudo ln -s /etc/nginx/sites-available/glpi-SEU_DOMINIO /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/grafana-SEU_DOMINIO /etc/nginx/sites-enabled/
 sudo rm /etc/nginx/sites-enabled/default
 sudo openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 2048
 sudo nginx -t
+```
 
+### 3.7. Reiniciar containers e Nginx
+
+```bash
 docker compose down
 docker compose up -d
 sudo systemctl reload nginx
 ```
 
----
-
-## 🎉 Conclusão
-
-Agora você tem o **GLPI** e o **Grafana** rodando com **Docker + Nginx + SSL** 🎊.
+Agora você tem o GLPI e o Grafana rodando com Docker + Nginx + SSL 🎊.
 Basta acessar:
 
-* 🌐 **GLPI:** `https://seu-dominio.com:8081`
-* 📊 **Grafana:** `https://seu-dominio.com:3000`
+🌐 GLPI: https://seu-dominio.com:8081
 
----
-
-```
-
----
-
-Quer que eu já prepare também o **repositório inicial** (com estrutura `/docker/glpi-server/`, `.gitignore`, `README.md` e placeholders dos arquivos `.env` e `docker-compose.yml`) para você só dar um `git init` e publicar?
-```
+📊 Grafana: https://seu-dominio.com:3000
