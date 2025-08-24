@@ -1,5 +1,3 @@
----
-
 ````markdown
 # 📘 Tutorial de Implantação GLPI + Grafana com Docker, Nginx e SSL
 
