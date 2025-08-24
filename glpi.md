@@ -1,6 +1,3 @@
-Perfeito 🚀 Vou montar o **README.md** já formatado para o GitHub, com cabeçalhos, blocos de código, avisos ⚠️ e alguns emojis para deixar mais visual.
-Aqui está a versão pronta:
-
 ---
 
 ````markdown
