@@ -1,7 +1,8 @@
 ````markdown
 # 📘 Tutorial de Implantação GLPI + Grafana com Docker, Nginx e SSL
 
-Este guia mostra como implantar o **GLPI** e o **Grafana** em containers Docker, utilizando **Nginx como proxy reverso** e **Certbot para SSL** 🔐.  
+Este guia mostra como implantar o **GLPI** e o **Grafana** em containers Docker, utilizando **Nginx como proxy reverso** e
+**Certbot para SSL** 🔐.  
 Tudo foi deixado **genérico**, sem credenciais ou domínios reais. Basta **editar os arquivos `.env` e as configs do Nginx** para seu ambiente.
 
 ---
