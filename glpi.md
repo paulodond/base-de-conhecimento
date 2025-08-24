@@ -53,6 +53,8 @@ cd /docker/glpi-server
 
 ### 🔑 2.2. Criar arquivo `.env` com variáveis
 
+vim.tiny .env
+
 ```bash
 cat > .env << 'EOL'
 # Config MariaDB
@@ -74,6 +76,7 @@ GF_SECURITY_ADMIN_PASSWORD=defina_sua_senha
 GF_SERVER_ROOT_URL=https://seu-dominio.com:3000
 EOL
 
+# Restringido persmissões ao .env
 chmod 600 .env
 ```
 
@@ -82,6 +85,8 @@ chmod 600 .env
 ---
 
 ### 📜 2.3. Criar arquivo `docker-compose.yml`
+
+vim.tiny docker-compose.yml
 
 ```yaml
 services:
@@ -193,7 +198,77 @@ sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.ba
 * Configure segurança (TLS 1.2/1.3, cabeçalhos de segurança, gzip etc.)
 * Inclua diretivas para **proxy reverso** e **logs**
 
-*(Use o exemplo do tutorial e troque `seu-dominio.com` e `IP_DO_SERVIDOR` pelos seus.)*
+```
+vim.tiny /etc/nginx/nginx.conf
+
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+    worker_connections 768;
+    multi_accept on;
+    use epoll;
+}
+
+http {
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+    server_tokens off;
+
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384;
+    ssl_session_timeout 10m;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_tickets off;
+
+    proxy_buffering on;
+    proxy_buffer_size 16k;
+    proxy_buffers 8 16k;
+    proxy_busy_buffers_size 24k;
+    proxy_temp_file_write_size 128k;
+    proxy_connect_timeout 60s;
+    proxy_send_timeout 60s;
+    proxy_read_timeout 60s;
+
+    add_header X-Frame-Options DENY;
+    add_header X-Content-Type-Options nosniff;
+    add_header X-XSS-Protection "1; mode=block";
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+    access_log /var/log/nginx/access.log main;
+    error_log /var/log/nginx/error.log;
+
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_types
+        text/plain
+        text/css
+        text/xml
+        text/javascript
+        application/json
+        application/javascript
+        application/xml+rss
+        application/atom+xml
+        image/svg+xml;
+
+    include /etc/nginx/conf.d/*.conf;
+    include /etc/nginx/sites-enabled/*;
+}
+
 
 ---
 
