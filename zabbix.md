@@ -296,6 +296,11 @@ sudo cp /etc/zabbix/zabbix_proxy.conf /etc/zabbix/zabbix_proxy.conf.bak
 
 Edite o arquivo `/etc/zabbix/zabbix_proxy.conf` para ajustar os parâmetros de conexão com o Zabbix Server e outras configurações. Utilize um editor de texto de sua preferência (ex: `vim.tiny`, `nano`).
 
+Crie um diretório persistente para o banco do proxy, por exemplo:
+
+sudo mkdir -p /var/lib/zabbix
+sudo chown zabbix:zabbix /var/lib/zabbix
+
 ```bash
 vim.tiny /etc/zabbix/zabbix_proxy.conf
 ```
@@ -305,7 +310,7 @@ vim.tiny /etc/zabbix/zabbix_proxy.conf
 - `Server=your_zabbix_server_ip`: Defina o endereço IP ou hostname do seu Zabbix Server. Se o Zabbix Server estiver rodando em um container, use o IP do container.
 - `Hostname=your_proxy_hostname`: Escolha um nome único para o seu proxy. Este nome deve ser exatamente o mesmo que você registrará no frontend do Zabbix Server.
 - `ListenPort=your_chosen_port`: A porta padrão para o Zabbix Server é 10051. Para evitar conflitos, é recomendável usar uma porta diferente para o proxy, como `10061`. Esta porta será usada pelos agentes que se conectarão a este proxy.
-- `DBName=/tmp/zabbix_proxy`: Coloque esse caminha exatamente`.
+- `DBName=/var/lib/zabbix/zabbix_proxy.db`: Coloque esse caminha exatamente`.
 
 Exemplo de configuração (apenas os parâmetros alterados):
 
@@ -313,7 +318,7 @@ Exemplo de configuração (apenas os parâmetros alterados):
 Server=your_zabbix_server_ip
 Hostname=your_proxy_hostname
 ListenPort=your_chosen_port
-DBName=your_database_path
+DBName=/var/lib/zabbix/zabbix_proxy.db
 ```
 
 ### 6. Habilitar e Iniciar o Serviço do Proxy
@@ -342,16 +347,6 @@ Após a instalação e configuração do proxy, você precisará registrá-lo no
 
 - **Nome do Proxy:** Insira o `Hostname` que você definiu no arquivo `zabbix_proxy.conf`.
 - **Modo de Proxy:** Selecione `Ativo` ou `Passivo` conforme sua necessidade (o modo passivo é o padrão para a maioria das instalações).
-
-## Contribuição
-
-Sinta-se à vontade para contribuir com melhorias ou correções. Abra uma *issue* ou *pull request* no GitHub.
-
-## Licença
-
-Este projeto está licenciado sob a [Licença MIT](https://opensource.org/licenses/MIT).
-
-
 
 
 ## Contribuição
