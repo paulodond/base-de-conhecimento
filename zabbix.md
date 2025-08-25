@@ -305,7 +305,7 @@ vim.tiny /etc/zabbix/zabbix_proxy.conf
 - `Server=your_zabbix_server_ip`: Defina o endereço IP ou hostname do seu Zabbix Server. Se o Zabbix Server estiver rodando em um container, use o IP do container.
 - `Hostname=your_proxy_hostname`: Escolha um nome único para o seu proxy. Este nome deve ser exatamente o mesmo que você registrará no frontend do Zabbix Server.
 - `ListenPort=your_chosen_port`: A porta padrão para o Zabbix Server é 10051. Para evitar conflitos, é recomendável usar uma porta diferente para o proxy, como `10061`. Esta porta será usada pelos agentes que se conectarão a este proxy.
-- `DBName=your_database_path`: Caminho completo para o arquivo do banco de dados SQLite do proxy. Por exemplo, `/var/lib/zabbix/zabbix_proxy.db`.
+- `DBName=/tmp/zabbix_proxy`: Coloque esse caminha exatamente`.
 
 Exemplo de configuração (apenas os parâmetros alterados):
 
