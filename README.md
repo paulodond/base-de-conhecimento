@@ -14,3 +14,4 @@ Sinta-se à vontade para abrir issues ou enviar pull requests para melhorar noss
 - [pfSense](pfSense.md)
 - [RustDesk Self-Hosting](rustdesk.md)
 - [GLPI + GRAFANA](glpi.md)
+- [Zabbix + Zabbix proxy](zabbix.md)
