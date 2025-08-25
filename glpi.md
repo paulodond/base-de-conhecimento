@@ -469,7 +469,12 @@ sudo systemctl reload nginx
 
 Agora você tem o GLPI e o Grafana rodando com Docker + Nginx + SSL 🎊.
 Basta acessar:
-
 🌐 GLPI: https://seu-dominio.com:8081
 
 📊 Grafana: https://seu-dominio.com:3000
+
+OBs: O SQL Server é o nome do container que você atribuiu lá no docker-compose.yml  e não localhost
+
+<img width="931" height="562" alt="image" src="https://github.com/user-attachments/assets/d7bf801f-cd24-40f2-8afb-062e6b075a61" />
+
+
